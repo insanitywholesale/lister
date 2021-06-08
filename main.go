@@ -4,6 +4,7 @@ import (
 	"fmt"
 	api "gitlab.com/insanitywholesale/lister/grpc"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
+	"gitlab.com/insanitywholesale/lister/rest"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -26,5 +27,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterListerServer(grpcServer, api.Server{})
 	reflection.Register(grpcServer)
-	log.Fatal(grpcServer.Serve(listener))
+	go grpcServer.Serve(listener)
+
+	log.Fatal(rest.RunGateway(grpcport, "8080"))
 }

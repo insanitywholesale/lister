@@ -13,18 +13,14 @@ getdeps:
 	go install -v github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
 
 protos:
-	protoc -I ./proto/ \
+	protoc -I ./proto/ -I third_party/googleapis -I third_party/grpc-gateway \
+    --openapiv2_out=./openapiv2 --openapiv2_opt logtostderr=true \
     --go_out=. --go_opt=module=gitlab.com/insanitywholesale/lister \
     --go-grpc_out=. --go-grpc_opt=module=gitlab.com/insanitywholesale/lister \
+    --grpc-gateway_out ./proto \
+    --grpc-gateway_opt logtostderr=true \
+    --grpc-gateway_opt paths=source_relative \
 	proto/v1/*.proto
-	#protoc -I ./proto/ -I third_party/googleapis -I third_party/grpc-gateway \
-    #--openapiv2_out=./openapiv2 --openapiv2_opt logtostderr=true \
-    #--go_out=. --go_opt=module=gitlab.com/insanitywholesale/lister \
-    #--go-grpc_out=. --go-grpc_opt=module=gitlab.com/insanitywholesale/lister \
-    #--grpc-gateway_out ./proto \
-    #--grpc-gateway_opt logtostderr=true \
-    #--grpc-gateway_opt paths=source_relative \
-	#proto/v1/*.proto
 
 gorelease:
 	go install -v github.com/goreleaser/goreleaser@latest

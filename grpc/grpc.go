@@ -10,13 +10,13 @@ type Server struct {
 }
 
 func (Server) GetAllLists(context.Context, *pb.Empty) (*pb.Lists, error) {
-	return nil, nil
+	return &pb.Lists{}, nil
 }
 
 func (Server) GetList(_ context.Context, _ *pb.List) (*pb.List, error) {
-	return nil, nil
+	return &pb.List{}, nil
 }
 
 func (Server) AddList(_ context.Context, _ *pb.List) (*pb.Lists, error) {
-	return nil, nil
+	return &pb.Lists{}, nil
 }

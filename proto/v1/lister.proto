@@ -3,11 +3,48 @@ syntax = "proto3";
 package lister.v1;
 option go_package = "gitlab.com/insanitywholesale/lister/proto/v1";
 
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Lister";
+        version: "0.0.1";
+        contact: {
+            name: "inherently";
+            url: "https://distro.watch";
+            email: "pepitsizous@zoho.com";
+        };
+        license: {
+            name: "AGPLv3";
+            url: "https://git.distro.watch/inherently/lister/src/branch/master/LICENSE";
+        };
+    };
+
+    schemes: HTTP;
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
 service Lister {
-	rpc GetAllLists(Empty) returns (Lists) {};
-	rpc GetList(List) returns (List) {};
+	rpc GetAllLists(Empty) returns (Lists) {
+		option (google.api.http) = {
+			get: "/api/v1/lists"
+		};
+	};
+	rpc GetList(List) returns (List) {
+		option (google.api.http) = {
+			get: "/api/v1/list/{id}"
+		};
+	};
 	//rpc GetList(uint32) returns (List) {}; either this or the above
-	rpc AddList(List) returns (Lists) {};
+	rpc AddList(List) returns (Lists) {
+		option (google.api.http) = {
+			post: "/api/v1/list"
+			body: "*"
+		};
+	};
 	//rpc DelList(List) returns (Lists) {};
 };
 
