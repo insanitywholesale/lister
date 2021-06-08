@@ -6,7 +6,8 @@ import (
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"net/http"
+	"log"
+	"net"
 	"os"
 )
 
