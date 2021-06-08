@@ -16,7 +16,6 @@ var testlist = &pb.List{
 
 type listrepo []*pb.List
 
-//var testlists listrepo = []&pb.Lists{
 var testlists listrepo = []*pb.List{
 	testlist,
 		&pb.List{
@@ -29,8 +28,6 @@ var testlists listrepo = []*pb.List{
 			},
 		},
 }
-	//Lists: []*pb.List{
-	//},
 
 func NewMockRepo() (listrepo, error) {
 	return testlists, nil

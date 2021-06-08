@@ -38,14 +38,12 @@ service Lister {
 			get: "/api/v1/list/{id}"
 		};
 	};
-	//rpc GetList(uint32) returns (List) {}; either this or the above
 	rpc AddList(List) returns (Lists) {
 		option (google.api.http) = {
 			post: "/api/v1/list"
 			body: "*"
 		};
 	};
-	//rpc DelList(List) returns (Lists) {};
 };
 
 message List {

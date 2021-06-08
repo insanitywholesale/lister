@@ -31,7 +31,6 @@
   "paths": {
     "/api/v1/list": {
       "post": {
-        "summary": "rpc GetList(uint32) returns (List) {}; either this or the above",
         "operationId": "Lister_AddList",
         "responses": {
           "200": {

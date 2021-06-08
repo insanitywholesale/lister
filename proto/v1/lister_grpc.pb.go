@@ -20,7 +20,6 @@ const _ = grpc.SupportPackageIsVersion7
 type ListerClient interface {
 	GetAllLists(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Lists, error)
 	GetList(ctx context.Context, in *List, opts ...grpc.CallOption) (*List, error)
-	//rpc GetList(uint32) returns (List) {}; either this or the above
 	AddList(ctx context.Context, in *List, opts ...grpc.CallOption) (*Lists, error)
 }
 
@@ -65,7 +64,6 @@ func (c *listerClient) AddList(ctx context.Context, in *List, opts ...grpc.CallO
 type ListerServer interface {
 	GetAllLists(context.Context, *Empty) (*Lists, error)
 	GetList(context.Context, *List) (*List, error)
-	//rpc GetList(uint32) returns (List) {}; either this or the above
 	AddList(context.Context, *List) (*Lists, error)
 	mustEmbedUnimplementedListerServer()
 }
