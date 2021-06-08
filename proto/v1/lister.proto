@@ -51,7 +51,7 @@ service Lister {
 message List {
 	uint32 id = 1;
 	string title = 2;
-	repeated string item = 3;
+	repeated string items = 3;
 };
 
 message Lists {

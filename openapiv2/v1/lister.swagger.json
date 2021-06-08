@@ -94,7 +94,7 @@
             "type": "string"
           },
           {
-            "name": "item",
+            "name": "items",
             "in": "query",
             "required": false,
             "type": "array",
@@ -173,7 +173,7 @@
         "title": {
           "type": "string"
         },
-        "item": {
+        "items": {
           "type": "array",
           "items": {
             "type": "string"
