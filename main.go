@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	api "gitlab.com/insanitywholesale/lister/grpc"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 	"gitlab.com/insanitywholesale/lister/rest"
@@ -13,7 +12,6 @@ import (
 )
 
 func main() {
-	fmt.Println("hey")
 	grpcport := os.Getenv("LISTER_GRPC_PORT")
 	if grpcport == "" {
 		grpcport = "15200"
@@ -29,5 +27,9 @@ func main() {
 	reflection.Register(grpcServer)
 	go grpcServer.Serve(listener)
 
-	log.Fatal(rest.RunGateway(grpcport, "8080"))
+	restport := os.Getenv("LISTER_REST_PORT")
+	if restport == "" {
+		restport = "9392"
+	}
+	log.Fatal(rest.RunGateway(grpcport, restport))
 }
