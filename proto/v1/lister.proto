@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package lister.v1;
+option go_package = "gitlab.com/insanitywholesale/lister/proto/v1";
+
+service Lister {
+	rpc GetAllLists(Empty) returns (Lists) {};
+	rpc GetList(List) returns (List) {};
+	//rpc GetList(uint32) returns (List) {}; either this or the above
+	rpc AddList(List) returns (Lists) {};
+	//rpc DelList(List) returns (Lists) {};
+};
+
+message List {
+	uint32 id = 1;
+	string title = 2;
+	repeated string item = 3;
+};
+
+message Lists {
+	repeated List lists = 1;
+};
+
+message Empty {};
