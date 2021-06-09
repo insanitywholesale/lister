@@ -18,21 +18,13 @@ func init() {
 }
 
 func (Server) GetAllLists(context.Context, *pb.Empty) (*pb.Lists, error) {
-	lists, err := dbstore.RetrieveAll()
-	if err != nil {
-		return nil, err
-	}
-	return lists, nil
+	return dbstore.RetrieveAll()
 }
 
 func (Server) GetList(_ context.Context, list *pb.List) (*pb.List, error) {
-	list, err := dbstore.Retrieve(list)
-	if err != nil {
-		return nil, err
-	}
-	return list, nil
+	return dbstore.Retrieve(list)
 }
 
-func (Server) AddList(_ context.Context, _ *pb.List) (*pb.Lists, error) {
-	return &pb.Lists{}, nil
+func (Server) AddList(_ context.Context, list *pb.List) (*pb.Lists, error) {
+	return dbstore.Save(list)
 }

@@ -18,16 +18,18 @@ type listrepo []*pb.List
 
 var testlists listrepo = []*pb.List{
 	testlist,
-		&pb.List{
-			Id:    2,
-			Title: "Git forges",
-			Items: []string{
-				"https://gitlab.com/insanitywholesale",
-				"https://github.com/insanitywholesale",
-				"http://gitnas.hell:3000/inherently",
-			},
+	&pb.List{
+		Id:    2,
+		Title: "Git forges",
+		Items: []string{
+			"https://gitlab.com/insanitywholesale",
+			"https://github.com/insanitywholesale",
+			"http://gitnas.hell:3000/inherently",
 		},
+	},
 }
+
+var listId uint32 = 3
 
 func NewMockRepo() (listrepo, error) {
 	return testlists, nil
@@ -48,6 +50,8 @@ func (listrepo) Retrieve(list *pb.List) (*pb.List, error) {
 }
 
 func (listrepo) Save(list *pb.List) (*pb.Lists, error) {
+	list.Id = listId
+	listId = listId + 1
 	testlists = append(testlists, list)
 	return &pb.Lists{Lists: testlists}, nil
 }

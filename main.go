@@ -25,11 +25,13 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterListerServer(grpcServer, api.Server{})
 	reflection.Register(grpcServer)
+	log.Println("grpc started on port", grpcport)
 	go grpcServer.Serve(listener)
 
 	restport := os.Getenv("LISTER_REST_PORT")
 	if restport == "" {
 		restport = "9392"
 	}
+	log.Println("rest starting on port", restport)
 	log.Fatal(rest.RunGateway(grpcport, restport))
 }
