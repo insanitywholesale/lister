@@ -9,8 +9,8 @@ type cassandraRepo struct {
 	session *gocql.Session
 }
 
-func NewCassandraRepo(hosts ...string) (*gocql.Session, error) {
-	cluster := gocql.NewCluster(hosts)
+func NewCassandraRepo(hosts []string) (*gocql.Session, error) {
+	cluster := gocql.NewCluster()
 	cluster.Keyspace = "lister"
 	session, err := cluster.CreateSession()
 	if err != nil {
@@ -21,7 +21,7 @@ func NewCassandraRepo(hosts ...string) (*gocql.Session, error) {
 
 //TODO: implement
 func (cassandraRepo) RetrieveAll() (*pb.Lists, error) {
-	return &pb.List{}, nil
+	return &pb.Lists{}, nil
 }
 
 //TODO: implement

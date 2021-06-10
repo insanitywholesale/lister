@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	_ "github.com/lib/pq"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
-	"log"
 )
 
 type postgresRepo struct {
@@ -63,25 +62,28 @@ func(r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
 	return &pb.Lists{Lists: listslice}, nil
 }
 
-func(r *postgresRepo) Retrieve(l *pb.List) (*pb.List, error) {
-	row, err := r.client.Query(listRetrievalQuery, l.Id)
+func(r *postgresRepo) Retrieve(list *pb.List) (*pb.List, error) {
+	row, err := r.client.Query(listRetrievalQuery, list.Id)
 	if err != nil {
 		return nil, err
 	}
 	err = row.Scan(
 		&list.Id,
 		&list.Title,
-		&list.Items
+		&list.Items,
 	)
 	return list, nil
 }
 
 func(r *postgresRepo) Save(list *pb.List) (*pb.Lists, error) {
-	var id int
+	var id uint32
 	err := r.client.QueryRow(listInsertQuery,
 		list.Title,
-		list.Items,
+		list.Items, //TODO: this doesn't work from golang []string to sql TEXT
 	).Scan(&id)
+	if err != nil {
+		return nil, err
+	}
 	list.Id = id
 	return r.RetrieveAll()
 }

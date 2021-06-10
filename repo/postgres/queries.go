@@ -9,4 +9,7 @@ CREATE TABLE if not exists List (
 
 var listRetrieveAllQuery = `SELECT * FROM List`
 var listRetrievalQuery = `SELECT * FROM List WHERE Id=$1;`
-var listInsertQuery = `INSERT INTO List`
+var listInsertQuery = `INSERT INTO List (
+	Title,
+	Items
+) VALUES ($1, $2) RETURNING Id;`
