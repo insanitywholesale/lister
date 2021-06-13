@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"gitlab.com/insanitywholesale/lister/models"
+	"os"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 	"gitlab.com/insanitywholesale/lister/repo/mock"
 	"gitlab.com/insanitywholesale/lister/repo/postgres"
@@ -16,12 +17,24 @@ type Server struct {
 var dbstore models.ListsRepo
 
 func init() {
-	db, err := postgres.NewPostgresRepo("postgresql://tester:Apasswd@localhost:5432?sslmode=disable")
-	if err != nil {
-		log.Fatalf("error %v", err)
+	if os.Getenv("PG_URL") != "" {
+		pgURL := os.Getenv("PG_URL")
+		if pgURL == "test" {
+			db, err := postgres.NewPostgresRepo("postgresql://tester:Apasswd@localhost:5432?sslmode=disable")
+			if err != nil {
+				log.Fatalf("error %v", err)
+			}
+		}
+		else {
+			db, err := postgres.NewPostgresRepo(pgURL)
+			if err != nil {
+				log.Fatalf("error %v", err)
+			}
+		}
+		dbstore = db
 	}
 	dbstore, _ = mock.NewMockRepo()
-	dbstore = db
+	return
 }
 
 func (Server) GetAllLists(context.Context, *pb.Empty) (*pb.Lists, error) {
