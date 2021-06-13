@@ -3,11 +3,11 @@ package grpc
 import (
 	"context"
 	"gitlab.com/insanitywholesale/lister/models"
-	"os"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 	"gitlab.com/insanitywholesale/lister/repo/mock"
 	"gitlab.com/insanitywholesale/lister/repo/postgres"
 	"log"
+	"os"
 )
 
 type Server struct {
@@ -25,8 +25,7 @@ func init() {
 				log.Fatalf("error %v", err)
 			}
 		}
-	}
-	else {
+	} else {
 		db, err := postgres.NewPostgresRepo(pgURL)
 		if err != nil {
 			log.Fatalf("error %v", err)
