@@ -17,21 +17,22 @@ type Server struct {
 var dbstore models.ListsRepo
 
 func init() {
+	pgURL := os.Getenv("PG_URL")
 	if os.Getenv("PG_URL") != "" {
-		pgURL := os.Getenv("PG_URL")
 		if pgURL == "test" {
 			db, err := postgres.NewPostgresRepo("postgresql://tester:Apasswd@localhost:5432?sslmode=disable")
 			if err != nil {
 				log.Fatalf("error %v", err)
 			}
-		}
-	} else {
-		db, err := postgres.NewPostgresRepo(pgURL)
-		if err != nil {
-			log.Fatalf("error %v", err)
+			dbstore = db
+		} else {
+			db, err := postgres.NewPostgresRepo(pgURL)
+			if err != nil {
+				log.Fatalf("error %v", err)
+			}
+			dbstore = db
 		}
 	}
-	dbstore = db
 	dbstore, _ = mock.NewMockRepo()
 	return
 }
