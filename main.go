@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	api "gitlab.com/insanitywholesale/lister/grpc"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 	"gitlab.com/insanitywholesale/lister/rest"
@@ -8,8 +9,30 @@ import (
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+	"net/http"
 	"os"
 )
+
+var (
+	//go:embed openapiv2/v1/lister.swagger.json
+	openapiDocs []byte
+
+	commitHash string
+	commitDate string
+)
+
+func getDocs(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		w.Write(openapiDocs)
+	}
+}
+
+func getInfo(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		w.Write([]byte("commitHash: " + commitHash + "\n"))
+		w.Write([]byte("commitDate: " + commitDate + "\n"))
+	}
+}
 
 func main() {
 	grpcport := os.Getenv("LISTER_GRPC_PORT")
@@ -32,6 +55,18 @@ func main() {
 	if restport == "" {
 		restport = "9392"
 	}
+
+	gw := rest.RunGateway(grpcport, restport)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/info/", getInfo)
+	mux.HandleFunc("/docs/", getDocs)
+	mux.Handle("/", gw)
+
+	s := &http.Server{
+		Addr:    ":" + restport,
+		Handler: mux,
+	}
+
 	log.Println("rest starting on port", restport)
-	log.Fatal(rest.RunGateway(grpcport, restport))
+	log.Fatal(s.ListenAndServe())
 }

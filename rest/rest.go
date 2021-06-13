@@ -6,10 +6,11 @@ import (
 	"github.com/rs/cors"
 	gw "gitlab.com/insanitywholesale/lister/proto/v1"
 	"google.golang.org/grpc"
+	"log"
 	"net/http"
 )
 
-func RunGateway(grpcport string, restport string) error {
+func RunGateway(grpcport string, restport string) http.Handler {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -18,8 +19,8 @@ func RunGateway(grpcport string, restport string) error {
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 	err := gw.RegisterListerHandlerFromEndpoint(ctx, mux, ":"+grpcport, opts)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-	handler := cors.Default().Handler(mux)
-	return http.ListenAndServe(":"+restport, handler)
+
+	return cors.Default().Handler(mux)
 }
