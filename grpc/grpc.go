@@ -4,9 +4,9 @@ import (
 	"context"
 	"gitlab.com/insanitywholesale/lister/models"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
+	"gitlab.com/insanitywholesale/lister/repo/cassandra"
 	"gitlab.com/insanitywholesale/lister/repo/mock"
 	"gitlab.com/insanitywholesale/lister/repo/postgres"
-	"gitlab.com/insanitywholesale/lister/repo/cassandra"
 	"log"
 	"os"
 )
@@ -20,11 +20,15 @@ var dbstore models.ListsRepo
 func init() {
 	cassURL := os.Getenv("CASS_URL")
 	if cassURL != "" {
-		db, err := cassandra.NewCassandraRepo([]string{"ip1", "ip2", "ip3"})
-		if err != nil {
-			log.Fatalf("error %v", err)
+		if cassURL == "test" {
+			//db, err := cassandra.NewCassandraRepo([]string{"ip1", "ip2", "ip3"})
+			db, err := cassandra.NewCassandraRepo([]string{"localhost:9042"})
+			if err != nil {
+				log.Fatalf("error %v", err)
+			}
+			dbstore = db
 		}
-		dbstore = db
+		return
 	}
 	pgURL := os.Getenv("PG_URL")
 	if pgURL != "" {
@@ -41,6 +45,7 @@ func init() {
 			}
 			dbstore = db
 		}
+		return
 	}
 	dbstore, _ = mock.NewMockRepo()
 	return
