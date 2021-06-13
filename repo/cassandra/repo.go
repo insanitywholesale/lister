@@ -9,14 +9,26 @@ type cassandraRepo struct {
 	session *gocql.Session
 }
 
-func NewCassandraRepo(hosts []string) (*gocql.Session, error) {
+func newCassandraSession(hosts []string) (*gocql.Session, error) {
 	cluster := gocql.NewCluster()
+	cluster.Hosts = hosts
 	cluster.Keyspace = "lister"
 	session, err := cluster.CreateSession()
 	if err != nil {
 		return nil, err
 	}
 	return session, nil
+}
+
+func NewCassandraRepo(hosts []string) (*cassandraRepo, error) {
+	cassandraSession, err := newCassandraSession(hosts)
+	if err != nil {
+		return nil, err
+	}
+	repo := &cassandraRepo{
+		session: cassandraSession,
+	}
+	return repo, nil
 }
 
 //TODO: implement
