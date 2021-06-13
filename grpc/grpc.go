@@ -3,9 +3,9 @@ package grpc
 import (
 	"context"
 	"gitlab.com/insanitywholesale/lister/models"
-	"gitlab.com/insanitywholesale/lister/repo/postgres"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 	"gitlab.com/insanitywholesale/lister/repo/mock"
+	"gitlab.com/insanitywholesale/lister/repo/postgres"
 	"log"
 )
 

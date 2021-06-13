@@ -1,26 +1,28 @@
 package postgres
 
 import (
-	"database/sql"
-	_ "github.com/lib/pq"
+	"context"
+	"github.com/jackc/pgx/v4"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 )
 
 type postgresRepo struct {
-	client *sql.DB
+	client *pgx.Conn
 	pgURL  string
 }
 
-func newPostgresClient(url string) (*sql.DB, error) {
-	client, err := sql.Open("postgres", url)
+var ctx = context.Background()
+
+func newPostgresClient(url string) (*pgx.Conn, error) {
+	client, err := pgx.Connect(ctx, url)
 	if err != nil {
 		return nil, err
 	}
-	err = client.Ping()
+	err = client.Ping(ctx)
 	if err != nil {
 		return nil, err
 	}
-	_, err = client.Exec(createListTableQuery)
+	_, err = client.Exec(ctx, createListTableQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -39,11 +41,11 @@ func NewPostgresRepo(url string) (*postgresRepo, error) {
 	return repo, nil
 }
 
-func(r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
+func (r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
 	var list = &pb.List{}
 	var listslice []*pb.List
 
-	rows, err := r.client.Query(listRetrieveAllQuery)
+	rows, err := r.client.Query(ctx, listRetrieveAllQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -62,8 +64,8 @@ func(r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
 	return &pb.Lists{Lists: listslice}, nil
 }
 
-func(r *postgresRepo) Retrieve(list *pb.List) (*pb.List, error) {
-	row, err := r.client.Query(listRetrievalQuery, list.Id)
+func (r *postgresRepo) Retrieve(list *pb.List) (*pb.List, error) {
+	row, err := r.client.Query(ctx, listRetrievalQuery, list.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -75,11 +77,11 @@ func(r *postgresRepo) Retrieve(list *pb.List) (*pb.List, error) {
 	return list, nil
 }
 
-func(r *postgresRepo) Save(list *pb.List) (*pb.Lists, error) {
+func (r *postgresRepo) Save(list *pb.List) (*pb.Lists, error) {
 	var id uint32
-	err := r.client.QueryRow(listInsertQuery,
+	err := r.client.QueryRow(ctx, listInsertQuery,
 		list.Title,
-		list.Items, //TODO: this doesn't work from golang []string to sql TEXT
+		list.Items,
 	).Scan(&id)
 	if err != nil {
 		return nil, err
