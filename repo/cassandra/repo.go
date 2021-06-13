@@ -72,7 +72,13 @@ func (r *cassandraRepo) Retrieve(list *pb.List) (*pb.List, error) {
 }
 
 func (r *cassandraRepo) Save(list *pb.List) (*pb.Lists, error) {
-	err := r.session.Query(listInsertQuery, list.Id, list.Title, list.Items).WithContext(ctx).Exec()
+	var id uint8
+	err := r.session.Query(listMaxIdQuery).WithContext(ctx).Consistency(gocql.One).Scan(&id)
+	if err != nil {
+		return nil, err
+	}
+	id = id + 1
+	err = r.session.Query(listInsertQuery, id, list.Title, list.Items).WithContext(ctx).Exec()
 	if err != nil {
 		return nil, err
 	}

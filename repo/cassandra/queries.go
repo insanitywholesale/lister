@@ -12,10 +12,11 @@ CREATE TABLE lister.List (
 	Items list<TEXT>
 );`
 
-var listRetrieveAllQuery = `SELECT id, title, items FROM List;`
-var listRetrievalQuery = `SELECT id, title, items FROM List WHERE Id=? LIMIT 1;`
+var listRetrieveAllQuery = `SELECT Id, Title, Items FROM List;`
+var listRetrievalQuery = `SELECT Id, Title, Items FROM List WHERE Id=? LIMIT 1;`
 var listInsertQuery = `INSERT INTO List (
 	Id,
 	Title,
 	Items
 ) VALUES (?, ?, ?);`
+var listMaxIdQuery = `SELECT MAX(id) FROM List WHERE id > 0 ALLOW FILTERING;`
