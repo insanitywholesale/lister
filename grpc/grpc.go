@@ -25,14 +25,14 @@ func init() {
 				log.Fatalf("error %v", err)
 			}
 		}
-		else {
-			db, err := postgres.NewPostgresRepo(pgURL)
-			if err != nil {
-				log.Fatalf("error %v", err)
-			}
-		}
-		dbstore = db
 	}
+	else {
+		db, err := postgres.NewPostgresRepo(pgURL)
+		if err != nil {
+			log.Fatalf("error %v", err)
+		}
+	}
+	dbstore = db
 	dbstore, _ = mock.NewMockRepo()
 	return
 }
