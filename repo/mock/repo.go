@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"strconv"
 	"errors"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 )
@@ -46,7 +47,7 @@ func (listrepo) Retrieve(list *pb.List) (*pb.List, error) {
 			return l, nil
 		}
 	}
-	return nil, errors.New("no list with ID" + string(id) + "was found")
+	return nil, errors.New("no list with ID " + strconv.Itoa(int(id)) + " was found")
 }
 
 func (listrepo) Save(list *pb.List) (*pb.Lists, error) {
