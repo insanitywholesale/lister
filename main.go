@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
-	"net/http"
+	//"net/http"
 	"os"
 )
 
@@ -20,19 +20,6 @@ var (
 	commitHash string
 	commitDate string
 )
-
-func getDocs(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		w.Write(openapiDocs)
-	}
-}
-
-func getInfo(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		w.Write([]byte("commitHash: " + commitHash + "\n"))
-		w.Write([]byte("commitDate: " + commitDate + "\n"))
-	}
-}
 
 func main() {
 	grpcport := os.Getenv("LISTER_GRPC_PORT")
@@ -56,17 +43,8 @@ func main() {
 		restport = "9392"
 	}
 
-	gw := rest.RunGateway(grpcport, restport)
-	mux := http.NewServeMux()
-	mux.HandleFunc("/info/", getInfo)
-	mux.HandleFunc("/docs/", getDocs)
-	mux.Handle("/", gw)
-
-	s := &http.Server{
-		Addr:    ":" + restport,
-		Handler: mux,
-	}
+	rest.SaveVars(openapiDocs, commitHash, commitDate)
 
 	log.Println("rest starting on port", restport)
-	log.Fatal(s.ListenAndServe())
+	log.Fatal(rest.RunGateway(grpcport, restport))
 }
