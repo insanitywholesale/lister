@@ -21,7 +21,6 @@ func init() {
 	cassURL := os.Getenv("CASS_URL")
 	if cassURL != "" {
 		if cassURL == "test" {
-			//db, err := cassandra.NewCassandraRepo([]string{"ip1", "ip2", "ip3"})
 			db, err := cassandra.NewCassandraRepo([]string{"localhost:9042"})
 			if err != nil {
 				log.Fatalf("error %v", err)
