@@ -21,6 +21,10 @@ func newCassandraSession(hosts []string) (*gocql.Session, error) {
 	if err != nil {
 		return nil, err
 	}
+	err = session.Query(createListTableQuery).WithContext(ctx).Exec()
+	if err != nil {
+		return nil, err
+	}
 	return session, nil
 }
 
