@@ -22,6 +22,12 @@ protos:
     --grpc-gateway_opt paths=source_relative \
 	proto/v1/*.proto
 
+buildwithvars:
+	rm -rf ./lister; go build -v -ldflags "-X main.commitHash=$$(git rev-parse --short HEAD) -X main.commitDate=$$(git log -1 --format=%ci | awk '{ print $$1 }')"
+
+installwithvars:
+	rm -rf ./lister; go install -v -ldflags "-X main.commitHash=$$(git rev-parse --short HEAD) -X main.commitDate=$$(git log -1 --format=%ci | awk '{ print $$1 }')"
+
 gorelease:
 	go install -v github.com/goreleaser/goreleaser@latest
 	goreleaser --snapshot --skip-publish --rm-dist
