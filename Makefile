@@ -1,4 +1,4 @@
-.PHONY: getdeps protos gorelease
+.PHONY: getdeps protos buildwithvars installwithvars gorelease
 
 getdeps:
 	which protoc
