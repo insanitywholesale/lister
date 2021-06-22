@@ -1,0 +1,17 @@
+{{ define "body" }}
+	<form method="POST" action="/form">
+		<fieldset>
+			<section>
+				<label for="input#name">New List's Name</label>
+				<input name="title" id="title" type="text"></input>
+			</section>
+			<section>
+				<label for="input#items">Items in New List</label>
+				<input name="items" id="items"></input>
+			</section>
+			<section>
+				<input type="submit" value="Add List"></input>
+			</section>
+		</fieldset>
+	</form>
+{{ end }}

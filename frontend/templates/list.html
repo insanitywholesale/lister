@@ -1,0 +1,17 @@
+{{ define "body" }}
+	<h1>Lists</h1>
+	<ul>
+	{{ range .Lists }}
+		<li>{{ .Id }}</li>
+		<li>{{ .Title }}</li>
+		<ul>
+			{{ range .Items }}
+				<li>{{ . }}</li>
+			{{ end }}
+		</ul>
+		<br/>
+	{{ end }}
+	</ul>
+</body>
+</html>
+{{ end }}
