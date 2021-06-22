@@ -30,21 +30,25 @@ func fallback(w http.ResponseWriter, r *http.Request) {
 
 func pong(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("pong\n"))
+	return
 }
 
 func getDocs(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.Write(openapiDocs)
+		return
 	}
+	return
 }
 
 func getInfo(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.Write([]byte("commitHash: " + commitHash + "\n"))
 		w.Write([]byte("commitDate: " + commitDate + "\n"))
+		return
 	}
+	return
 }
-
 
 func RunGateway(grpcport string, restport string) error {
 	ctx := context.Background()
