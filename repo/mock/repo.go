@@ -1,9 +1,9 @@
 package mock
 
 import (
-	"strconv"
 	"errors"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
+	"strconv"
 )
 
 var testlist = &pb.List{

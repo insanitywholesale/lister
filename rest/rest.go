@@ -65,7 +65,7 @@ func RunGateway(grpcport string, restport string) error {
 	handler := cors.Default().Handler(gwmux)
 
 	gwServer := &http.Server{
-		Addr: ":"+restport,
+		Addr: ":" + restport,
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if strings.HasPrefix(r.URL.Path, "/api") {
 				handler.ServeHTTP(w, r)
