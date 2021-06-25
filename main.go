@@ -18,7 +18,13 @@ var (
 
 	commitHash string
 	commitDate string
+
+	serviceName string = "lister"
 )
+
+func getServiceName() string {
+	return serviceName
+}
 
 func main() {
 	grpcport := os.Getenv("LISTER_GRPC_PORT")
