@@ -14,7 +14,10 @@ RUN make installwithvars
 # run stage
 FROM busybox as run
 
-COPY --from=build /go/bin/lister /lister
+ENV TEMPLATE_PATH "./templates"
+
+COPY --from=build /go/bin/lister /
+COPY --from=build /go/src/lister/frontend /
 
 EXPOSE 15200
 EXPOSE 9392
