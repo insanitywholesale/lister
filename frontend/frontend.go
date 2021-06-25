@@ -7,9 +7,9 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strings"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var (
