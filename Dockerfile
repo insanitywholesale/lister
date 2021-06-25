@@ -13,7 +13,10 @@ RUN make installwithvars
 
 # run stage
 FROM busybox as run
+
 COPY --from=build /go/bin/lister /lister
+
 EXPOSE 15200
 EXPOSE 9392
+
 CMD ["/lister"]
