@@ -9,6 +9,7 @@ import (
 	"gitlab.com/insanitywholesale/lister/repo/postgres"
 	"log"
 	"os"
+	"strings"
 )
 
 type Server struct {
@@ -22,6 +23,13 @@ func init() {
 	if cassURL != "" {
 		if cassURL == "test" {
 			db, err := cassandra.NewCassandraRepo([]string{"localhost:9042"})
+			if err != nil {
+				log.Fatalf("error %v", err)
+			}
+			dbstore = db
+		} else {
+			cassIPs := strings.Split(cassURL, ",")
+			db, err := cassandra.NewCassandraRepo(cassIPs)
 			if err != nil {
 				log.Fatalf("error %v", err)
 			}
