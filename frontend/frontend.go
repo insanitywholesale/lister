@@ -1,4 +1,4 @@
-package main
+package frontend
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 	"os"
 	"path/filepath"
 )
@@ -16,14 +17,10 @@ var (
 	lc           pb.ListerClient
 )
 
-func main() {
+func init() {
 	templatePath = os.Getenv("TEMPLATE_PATH")
 	if templatePath == "" {
-		templatePath = "./templates"
-	}
-	frontendPort := os.Getenv("FRONTEND_PORT")
-	if frontendPort == "" {
-		frontendPort = "8080"
+		templatePath = "./frontend/templates"
 	}
 	listerName := os.Getenv("LISTER_NAME")
 	if listerName == "" {
@@ -39,22 +36,47 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer conn.Close()
 	lc = pb.NewListerClient(conn)
-	log.Println("connected to lister over grpc")
-
-	http.HandleFunc("/", showLists)
-
-	log.Fatal(http.ListenAndServe(":"+frontendPort, nil))
 }
 
-func showLists(w http.ResponseWriter, r *http.Request) {
+func FormHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		return
+	}
+	if r.Method == "POST" {
+		var title string
+		var items []string
+		r.ParseForm()
+		var itemString string
+		if (r.Form["title"] != nil) && (len(r.Form["title"][0]) > 0) {
+			title = r.Form["title"][0]
+		} else {
+			http.Error(w, "Please set a title for the list", 400)
+		}
+		if r.Form["items"] != nil {
+			itemString = r.Form["items"][0]
+			items = strings.Split(itemString, ",")
+		} else {
+			http.Error(w, "Please add some items to the list", 400)
+		}
+		log.Println(title, items)
+		_, err := lc.AddList(context.Background(), &pb.List{Title: title, Items: items})
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+		}
+		http.Redirect(w, r, "/ui", 301)
+		return
+	}
+	return
+}
+
+func ShowLists(w http.ResponseWriter, r *http.Request) {
 	mainPath := filepath.Join(templatePath, "main.html")
 	listPath := filepath.Join(templatePath, "list.html")
 
 	l, err := lc.GetAllLists(context.Background(), &pb.Empty{})
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), 500)
 	}
 
 	t, err := template.ParseFiles(mainPath, listPath)
@@ -62,5 +84,17 @@ func showLists(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 	}
 	t.ExecuteTemplate(w, "main", l)
+	return
+}
+
+func ShowForm(w http.ResponseWriter, r *http.Request) {
+	mainPath := filepath.Join(templatePath, "main.html")
+	formPath := filepath.Join(templatePath, "form.html")
+
+	t, err := template.ParseFiles(mainPath, formPath)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
+	t.ExecuteTemplate(w, "main", nil)
 	return
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/rs/cors"
+	front "gitlab.com/insanitywholesale/lister/frontend"
 	gw "gitlab.com/insanitywholesale/lister/proto/v1"
 	"google.golang.org/grpc"
 	"net/http"
@@ -81,6 +82,18 @@ func RunGateway(grpcport string, restport string) error {
 			}
 			if strings.HasPrefix(r.URL.Path, "/ping") {
 				pong(w, r)
+				return
+			}
+			if strings.HasPrefix(r.URL.Path, "/ui") {
+				front.ShowLists(w, r)
+				return
+			}
+			if strings.HasPrefix(r.URL.Path, "/form") {
+				front.ShowForm(w, r)
+				return
+			}
+			if strings.HasPrefix(r.URL.Path, "/submit") {
+				front.FormHandler(w, r)
 				return
 			}
 			fallback(w, r)
