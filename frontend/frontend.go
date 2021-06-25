@@ -41,11 +41,13 @@ func init() {
 
 func FormHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
+		w.Write([]byte("this a form submission endpoint, wtf u doin fam\n"))
 		return
 	}
 	if r.Method == "POST" {
 		var title string
 		var items []string
+		var separator string
 		r.ParseForm()
 		var itemString string
 		if (r.Form["title"] != nil) && (len(r.Form["title"][0]) > 0) {
@@ -53,9 +55,14 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			http.Error(w, "Please set a title for the list", 400)
 		}
+		if r.Form["separator"] != nil {
+			separator = r.Form["separator"][0]
+		} else {
+			separator = " "
+		}
 		if r.Form["items"] != nil {
 			itemString = r.Form["items"][0]
-			items = strings.Split(itemString, ",")
+			items = strings.Split(itemString, separator)
 		} else {
 			http.Error(w, "Please add some items to the list", 400)
 		}
