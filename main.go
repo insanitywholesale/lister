@@ -19,6 +19,9 @@ var (
 	commitHash string
 	commitDate string
 
+	grpcport string
+	restport string
+
 	serviceName string = "lister"
 )
 
@@ -26,12 +29,18 @@ func getServiceName() string {
 	return serviceName
 }
 
-func main() {
-	grpcport := os.Getenv("LISTER_GRPC_PORT")
+func setupPorts() {
+	grpcport = os.Getenv("LISTER_GRPC_PORT")
 	if grpcport == "" {
 		grpcport = "15200"
 	}
+	restport = os.Getenv("LISTER_REST_PORT")
+	if restport == "" {
+		restport = "9392"
+	}
+}
 
+func startGRPC() {
 	listener, err := net.Listen("tcp", ":"+grpcport)
 	if err != nil {
 		log.Fatalf("listen failed %v", err)
@@ -41,15 +50,18 @@ func main() {
 	pb.RegisterListerServer(grpcServer, api.Server{})
 	reflection.Register(grpcServer)
 	log.Println("grpc started on port", grpcport)
-	go grpcServer.Serve(listener)
+	log.Fatal(grpcServer.Serve(listener))
+}
 
-	restport := os.Getenv("LISTER_REST_PORT")
-	if restport == "" {
-		restport = "9392"
-	}
-
+func startHTTP() {
 	rest.SaveVars(openapiDocs, commitHash, commitDate)
 
 	log.Println("rest starting on port", restport)
 	log.Fatal(rest.RunGateway(grpcport, restport))
+}
+
+func main() {
+	setupPorts()
+	go startGRPC()
+	defer startHTTP()
 }
