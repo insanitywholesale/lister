@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/jackc/pgx/v4"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
+	"log"
 )
 
 type postgresRepo struct {
@@ -42,15 +43,14 @@ func NewPostgresRepo(url string) (*postgresRepo, error) {
 }
 
 func (r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
-	var list = &pb.List{}
-	var listslice []*pb.List
-
+	var listslice = []*pb.List{}
 	rows, err := r.client.Query(ctx, listRetrieveAllQuery)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
+		var list = &pb.List{}
 		err = rows.Scan(
 			&list.Id,
 			&list.Title,
@@ -61,6 +61,7 @@ func (r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
 		}
 		listslice = append(listslice, list)
 	}
+	log.Println(listslice)
 	return &pb.Lists{Lists: listslice}, nil
 }
 
