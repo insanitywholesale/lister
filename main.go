@@ -2,8 +2,8 @@ package main
 
 import (
 	_ "embed"
-	api "gitlab.com/insanitywholesale/lister/grpc"
-	pb "gitlab.com/insanitywholesale/lister/proto/v1"
+	apiv1 "gitlab.com/insanitywholesale/lister/grpc/v1"
+	pbv1 "gitlab.com/insanitywholesale/lister/proto/v1"
 	"gitlab.com/insanitywholesale/lister/rest"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -47,7 +47,7 @@ func startGRPC() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterListerServer(grpcServer, api.Server{})
+	pbv1.RegisterListerServer(grpcServer, apiv1.Server{})
 	reflection.Register(grpcServer)
 	log.Println("grpc started on port", grpcport)
 	log.Fatal(grpcServer.Serve(listener))
