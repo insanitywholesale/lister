@@ -21,6 +21,14 @@ protos:
     --grpc-gateway_opt logtostderr=true \
     --grpc-gateway_opt paths=source_relative \
 	proto/v1/*.proto
+	protoc -I ./proto/ -I third_party/googleapis -I third_party/grpc-gateway \
+    --openapiv2_out=./openapiv2 --openapiv2_opt logtostderr=true \
+    --go_out=. --go_opt=module=gitlab.com/insanitywholesale/lister \
+    --go-grpc_out=. --go-grpc_opt=module=gitlab.com/insanitywholesale/lister \
+    --grpc-gateway_out ./proto \
+    --grpc-gateway_opt logtostderr=true \
+    --grpc-gateway_opt paths=source_relative \
+	proto/v2/*.proto
 
 buildwithvars:
 	rm -rf ./lister; go build -v -ldflags "-X main.commitHash=$$(git rev-parse --short HEAD) -X main.commitDate=$$(git log -1 --format=%ci | awk '{ print $$1 }')"

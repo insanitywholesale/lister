@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package lister.v2;
+option go_package = "gitlab.com/insanitywholesale/lister/proto/v2";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Lister";
+        version: "0.2.0-dev";
+        contact: {
+            name: "inherently";
+            url: "https://inherently.xyz";
+            email: "pepitsizous@zoho.com";
+        };
+        license: {
+            name: "AGPLv3";
+            url: "https://gitlab.com/insanitywholesale/lister/-/blob/main/LICENSE";
+        };
+    };
+
+    schemes: HTTP;
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+service Lister {
+	rpc GetAllLists(Empty) returns (Lists) {
+		option (google.api.http) = {
+			get: "/api/v2/lists"
+		};
+	};
+	rpc GetList(List) returns (List) {
+		option (google.api.http) = {
+			get: "/api/v2/list/{id}"
+		};
+	};
+	rpc AddList(List) returns (Empty) {
+		option (google.api.http) = {
+			post: "/api/v2/list"
+			body: "*"
+		};
+	};
+	rpc ChangeList(List) returns (Empty) {
+		option (google.api.http) = {
+			patch: "/api/v2/list"
+			body: "*"
+		};
+	};
+	rpc DeleteList(List) returns (Empty) {
+		option (google.api.http) = {
+			patch: "/api/v2/list"
+			body: "*"
+		};
+	};
+};
+
+message List {
+	uint32 id = 1;
+	string title = 2;
+	string status = 3;
+	repeated string items = 4;
+};
+
+message Lists {
+	repeated List lists = 1;
+};
+
+message Empty {};
