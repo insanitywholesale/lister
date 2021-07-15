@@ -2,26 +2,25 @@ package frontend
 
 import (
 	"context"
+	"embed"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 	"google.golang.org/grpc"
 	"html/template"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
 var (
-	templatePath string
+	//go:embed templates
+	templates    embed.FS
+	templatefs   fs.FS
 	lc           pb.ListerClient
 )
 
 func init() {
-	templatePath = os.Getenv("TEMPLATE_PATH")
-	if templatePath == "" {
-		templatePath = "./frontend/templates"
-	}
 	listerName := os.Getenv("LISTER_NAME")
 	if listerName == "" {
 		listerName = "localhost"
@@ -37,6 +36,11 @@ func init() {
 		log.Fatal(err)
 	}
 	lc = pb.NewListerClient(conn)
+	tfs, err := fs.Sub(templates, "templates")
+	if err != nil {
+		log.Fatal(err)
+	}
+	templatefs = tfs
 }
 
 func FormHandler(w http.ResponseWriter, r *http.Request) {
@@ -78,30 +82,24 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ShowLists(w http.ResponseWriter, r *http.Request) {
-	mainPath := filepath.Join(templatePath, "main.html")
-	listPath := filepath.Join(templatePath, "list.html")
-
 	l, err := lc.GetAllLists(context.Background(), &pb.Empty{})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
 
-	t, err := template.ParseFiles(mainPath, listPath)
+	tfs, err := template.ParseFS(templatefs, "main.html", "list.html")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
-	t.ExecuteTemplate(w, "main", l)
+	tfs.ExecuteTemplate(w, "main", l)
 	return
 }
 
 func ShowForm(w http.ResponseWriter, r *http.Request) {
-	mainPath := filepath.Join(templatePath, "main.html")
-	formPath := filepath.Join(templatePath, "form.html")
-
-	t, err := template.ParseFiles(mainPath, formPath)
+	tfs, err := template.ParseFS(templatefs, "main.html", "list.html")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
-	t.ExecuteTemplate(w, "main", nil)
+	tfs.ExecuteTemplate(w, "main", nil)
 	return
 }
