@@ -96,7 +96,7 @@ func ShowLists(w http.ResponseWriter, r *http.Request) {
 }
 
 func ShowForm(w http.ResponseWriter, r *http.Request) {
-	tfs, err := template.ParseFS(templatefs, "main.html", "list.html")
+	tfs, err := template.ParseFS(templatefs, "main.html", "form.html")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
