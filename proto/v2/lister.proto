@@ -52,7 +52,7 @@ service Lister {
 	};
 	rpc DeleteList(List) returns (Empty) {
 		option (google.api.http) = {
-			patch: "/api/v2/list"
+			delete: "/api/v2/list"
 			body: "*"
 		};
 	};
