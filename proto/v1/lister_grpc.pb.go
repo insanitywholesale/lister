@@ -21,6 +21,8 @@ type ListerClient interface {
 	GetAllLists(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Lists, error)
 	GetList(ctx context.Context, in *List, opts ...grpc.CallOption) (*List, error)
 	AddList(ctx context.Context, in *List, opts ...grpc.CallOption) (*Lists, error)
+	UpdateList(ctx context.Context, in *List, opts ...grpc.CallOption) (*List, error)
+	DeleteList(ctx context.Context, in *List, opts ...grpc.CallOption) (*Lists, error)
 }
 
 type listerClient struct {
@@ -58,6 +60,24 @@ func (c *listerClient) AddList(ctx context.Context, in *List, opts ...grpc.CallO
 	return out, nil
 }
 
+func (c *listerClient) UpdateList(ctx context.Context, in *List, opts ...grpc.CallOption) (*List, error) {
+	out := new(List)
+	err := c.cc.Invoke(ctx, "/lister.v1.Lister/UpdateList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *listerClient) DeleteList(ctx context.Context, in *List, opts ...grpc.CallOption) (*Lists, error) {
+	out := new(Lists)
+	err := c.cc.Invoke(ctx, "/lister.v1.Lister/DeleteList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ListerServer is the server API for Lister service.
 // All implementations must embed UnimplementedListerServer
 // for forward compatibility
@@ -65,6 +85,8 @@ type ListerServer interface {
 	GetAllLists(context.Context, *Empty) (*Lists, error)
 	GetList(context.Context, *List) (*List, error)
 	AddList(context.Context, *List) (*Lists, error)
+	UpdateList(context.Context, *List) (*List, error)
+	DeleteList(context.Context, *List) (*Lists, error)
 	mustEmbedUnimplementedListerServer()
 }
 
@@ -80,6 +102,12 @@ func (UnimplementedListerServer) GetList(context.Context, *List) (*List, error) 
 }
 func (UnimplementedListerServer) AddList(context.Context, *List) (*Lists, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddList not implemented")
+}
+func (UnimplementedListerServer) UpdateList(context.Context, *List) (*List, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateList not implemented")
+}
+func (UnimplementedListerServer) DeleteList(context.Context, *List) (*Lists, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteList not implemented")
 }
 func (UnimplementedListerServer) mustEmbedUnimplementedListerServer() {}
 
@@ -148,6 +176,42 @@ func _Lister_AddList_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Lister_UpdateList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(List)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ListerServer).UpdateList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/lister.v1.Lister/UpdateList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ListerServer).UpdateList(ctx, req.(*List))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Lister_DeleteList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(List)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ListerServer).DeleteList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/lister.v1.Lister/DeleteList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ListerServer).DeleteList(ctx, req.(*List))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Lister_ServiceDesc is the grpc.ServiceDesc for Lister service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -166,6 +230,14 @@ var Lister_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddList",
 			Handler:    _Lister_AddList_Handler,
+		},
+		{
+			MethodName: "UpdateList",
+			Handler:    _Lister_UpdateList_Handler,
+		},
+		{
+			MethodName: "DeleteList",
+			Handler:    _Lister_DeleteList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -46,14 +46,13 @@ service Lister {
 	};
 	rpc ChangeList(List) returns (Empty) {
 		option (google.api.http) = {
-			patch: "/api/v2/list"
+			patch: "/api/v2/list/{id}"
 			body: "*"
 		};
 	};
 	rpc DeleteList(List) returns (Empty) {
 		option (google.api.http) = {
-			delete: "/api/v2/list"
-			body: "*"
+			delete: "/api/v2/list/{id}"
 		};
 	};
 };

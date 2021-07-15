@@ -46,14 +46,13 @@ service Lister {
 	};
 	rpc UpdateList(List) returns (List) {
 		option (google.api.http) = {
-			patch: "/api/v1/list"
+			patch: "/api/v1/list/{id}"
 			body: "*"
 		};
 	};
-	rpc AddList(List) returns (List) {
+	rpc DeleteList(List) returns (Lists) {
 		option (google.api.http) = {
-			delete: "/api/v1/list"
-			body: "*"
+			delete: "/api/v1/list/{id}"
 		};
 	};
 };
