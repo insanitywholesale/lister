@@ -2,7 +2,7 @@ package grpc
 
 import (
 	"context"
-	"gitlab.com/insanitywholesale/lister/models"
+	models "gitlab.com/insanitywholesale/lister/models/v1"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
 	"gitlab.com/insanitywholesale/lister/repo/cassandra"
 	"gitlab.com/insanitywholesale/lister/repo/mock"
