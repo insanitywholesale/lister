@@ -90,3 +90,11 @@ func (r *postgresRepo) Save(list *pb.List) (*pb.Lists, error) {
 	list.Id = id
 	return r.RetrieveAll()
 }
+
+func (r *postgresRepo) Remove(list *pb.List) (*pb.Lists, error) {
+	_, err := r.client.Query(ctx, listDeleteQuery, list.Id)
+	if err != nil {
+		return nil, err
+	}
+	return r.RetrieveAll()
+}

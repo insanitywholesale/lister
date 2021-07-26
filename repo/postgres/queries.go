@@ -13,4 +13,4 @@ var listInsertQuery = `INSERT INTO List (
 	Title,
 	Items
 ) VALUES ($1, $2) RETURNING Id;`
-
+var listDeleteQuery = `DELETE FROM List WhERE Id=$1;`

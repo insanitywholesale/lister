@@ -69,3 +69,7 @@ func (Server) GetList(_ context.Context, list *pb.List) (*pb.List, error) {
 func (Server) AddList(_ context.Context, list *pb.List) (*pb.Lists, error) {
 	return dbstore.Save(list)
 }
+
+func (Server) DeleteList(_ context.Context, list *pb.List) (*pb.Lists, error) {
+	return dbstore.Remove(list)
+}
