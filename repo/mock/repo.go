@@ -56,3 +56,10 @@ func (listrepo) Save(list *pb.List) (*pb.Lists, error) {
 	testlists = append(testlists, list)
 	return &pb.Lists{Lists: testlists}, nil
 }
+
+func (listrepo) Remove(list *pb.List) (*pb.Lists, error) {
+	i := list.Id - 1
+	testlists[len(testlists)-1], testlists[i] = testlists[i], testlists[len(testlists)-1]
+	testlists = testlists[:len(testlists)-1]
+	return &pb.Lists{Lists: testlists}, nil
+}
