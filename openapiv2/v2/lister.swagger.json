@@ -99,6 +99,16 @@
             "type": "string"
           },
           {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
             "name": "items",
             "in": "query",
             "required": false,
@@ -148,6 +158,16 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           },
           {
             "name": "items",
@@ -201,6 +221,72 @@
                 "status": {
                   "type": "string"
                 },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Lister"
+        ]
+      }
+    },
+    "/api/v2/list/{id}/item": {
+      "patch": {
+        "summary": "item actions\nTODO: maybe add some more",
+        "operationId": "Lister_AppendItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2Empty"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "items": {
                   "type": "array",
                   "items": {
@@ -218,6 +304,7 @@
     },
     "/api/v2/lists": {
       "get": {
+        "summary": "list actions",
         "operationId": "Lister_GetAllLists",
         "responses": {
           "200": {
@@ -285,6 +372,12 @@
         },
         "status": {
           "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "items": {
           "type": "array",

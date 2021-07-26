@@ -18,11 +18,15 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ListerClient interface {
+	//list actions
 	GetAllLists(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Lists, error)
 	GetList(ctx context.Context, in *List, opts ...grpc.CallOption) (*List, error)
 	AddList(ctx context.Context, in *List, opts ...grpc.CallOption) (*Empty, error)
 	ChangeList(ctx context.Context, in *List, opts ...grpc.CallOption) (*Empty, error)
 	DeleteList(ctx context.Context, in *List, opts ...grpc.CallOption) (*Empty, error)
+	//item actions
+	//TODO: maybe add some more
+	AppendItem(ctx context.Context, in *List, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type listerClient struct {
@@ -78,15 +82,28 @@ func (c *listerClient) DeleteList(ctx context.Context, in *List, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *listerClient) AppendItem(ctx context.Context, in *List, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/lister.v2.Lister/AppendItem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ListerServer is the server API for Lister service.
 // All implementations must embed UnimplementedListerServer
 // for forward compatibility
 type ListerServer interface {
+	//list actions
 	GetAllLists(context.Context, *Empty) (*Lists, error)
 	GetList(context.Context, *List) (*List, error)
 	AddList(context.Context, *List) (*Empty, error)
 	ChangeList(context.Context, *List) (*Empty, error)
 	DeleteList(context.Context, *List) (*Empty, error)
+	//item actions
+	//TODO: maybe add some more
+	AppendItem(context.Context, *List) (*Empty, error)
 	mustEmbedUnimplementedListerServer()
 }
 
@@ -108,6 +125,9 @@ func (UnimplementedListerServer) ChangeList(context.Context, *List) (*Empty, err
 }
 func (UnimplementedListerServer) DeleteList(context.Context, *List) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteList not implemented")
+}
+func (UnimplementedListerServer) AppendItem(context.Context, *List) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AppendItem not implemented")
 }
 func (UnimplementedListerServer) mustEmbedUnimplementedListerServer() {}
 
@@ -212,6 +232,24 @@ func _Lister_DeleteList_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Lister_AppendItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(List)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ListerServer).AppendItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/lister.v2.Lister/AppendItem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ListerServer).AppendItem(ctx, req.(*List))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Lister_ServiceDesc is the grpc.ServiceDesc for Lister service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -238,6 +276,10 @@ var Lister_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteList",
 			Handler:    _Lister_DeleteList_Handler,
+		},
+		{
+			MethodName: "AppendItem",
+			Handler:    _Lister_AppendItem_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

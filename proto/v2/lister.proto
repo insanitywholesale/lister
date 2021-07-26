@@ -28,6 +28,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service Lister {
+	//list actions
 	rpc GetAllLists(Empty) returns (Lists) {
 		option (google.api.http) = {
 			get: "/api/v2/lists"
@@ -55,13 +56,22 @@ service Lister {
 			delete: "/api/v2/list/{id}"
 		};
 	};
+	//item actions
+	//TODO: maybe add some more
+	rpc AppendItem(List) returns (Empty) {
+		option (google.api.http) = {
+			patch: "/api/v2/list/{id}/item"
+			body: "*"
+		};
+	};
 };
 
 message List {
 	uint32 id = 1;
 	string title = 2;
 	string status = 3;
-	repeated string items = 4;
+	repeated string tags = 4;
+	repeated string items = 5;
 };
 
 message Lists {
