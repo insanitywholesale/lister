@@ -20,3 +20,4 @@ var listInsertQuery = `INSERT INTO lister.List (
 	Items
 ) VALUES (?, ?, ?);`
 var listMaxIdQuery = `SELECT MAX(id) FROM lister.List WHERE id > 0 ALLOW FILTERING;`
+var listDeleteQuery = `DELETE FROM lister.List WHERE Id=?;`

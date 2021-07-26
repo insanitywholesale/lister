@@ -88,3 +88,11 @@ func (r *cassandraRepo) Save(list *pb.List) (*pb.Lists, error) {
 	}
 	return r.RetrieveAll()
 }
+
+func (r *cassandraRepo) Remove(list *pb.List) (*pb.Lists, error) {
+	err := r.session.Query(listDeleteQuery, list.Id).WithContext(ctx).Exec()
+	if err != nil {
+		return nil, err
+	}
+	return r.RetrieveAll()
+}
