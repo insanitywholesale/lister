@@ -75,6 +75,9 @@ func (r *postgresRepo) Retrieve(list *pb.List) (*pb.List, error) {
 		&list.Title,
 		&list.Items,
 	)
+	if err != nil {
+		return nil, err
+	}
 	return list, nil
 }
 
