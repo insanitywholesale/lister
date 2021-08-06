@@ -12,6 +12,7 @@ var testlist = &pb.List{
 	Items: []string{
 		"http://www.proshop.gr/index.php?route=product/product&product_id=143",
 		"http://www.proshop.gr/index.php?route=product/product&product_id=62",
+		"http://www.proshop.gr/index.php?route=product/product&product_id=112",
 	},
 }
 
@@ -23,6 +24,7 @@ var testlists listrepo = []*pb.List{
 		Id:    2,
 		Title: "Git forges",
 		Items: []string{
+			"https://git.inherently.xyz",
 			"https://gitlab.com/insanitywholesale",
 			"https://github.com/insanitywholesale",
 			"http://gitnas.hell:3000/inherently",
