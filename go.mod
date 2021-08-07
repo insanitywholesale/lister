@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/bufbuild/buf v0.37.0 // indirect
+	github.com/georgysavva/scany v0.2.9
 	github.com/go-kit/kit v0.10.0 // indirect
 	github.com/gocql/gocql v0.0.0-20210707082121-9a3953d1826d
 	github.com/golang/protobuf v1.5.2
@@ -13,6 +14,7 @@ require (
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/pierrec/lz4/v4 v4.1.8 // indirect
 	github.com/rs/cors v1.8.0
+	github.com/stretchr/objx v0.3.0 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
 	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect

@@ -3,8 +3,8 @@ package postgres
 import (
 	"context"
 	"github.com/jackc/pgx/v4"
+	//"github.com/georgysavva/scany/pgxscan"
 	pb "gitlab.com/insanitywholesale/lister/proto/v1"
-	"log"
 )
 
 type postgresRepo struct {
@@ -43,6 +43,11 @@ func NewPostgresRepo(url string) (*postgresRepo, error) {
 }
 
 func (r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
+/*
+	var listslice []*pb.List
+	pgxscan.Select(ctx, r.client, &listslice, listRetrieveAllQuery)
+	return &pb.Lists{Lists: listslice}, nil
+*/
 	var listslice = []*pb.List{}
 	rows, err := r.client.Query(ctx, listRetrieveAllQuery)
 	if err != nil {
@@ -61,7 +66,6 @@ func (r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
 		}
 		listslice = append(listslice, list)
 	}
-	log.Println(listslice)
 	return &pb.Lists{Lists: listslice}, nil
 }
 
