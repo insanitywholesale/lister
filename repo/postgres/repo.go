@@ -43,11 +43,11 @@ func NewPostgresRepo(url string) (*postgresRepo, error) {
 }
 
 func (r *postgresRepo) RetrieveAll() (*pb.Lists, error) {
-/*
-	var listslice []*pb.List
-	pgxscan.Select(ctx, r.client, &listslice, listRetrieveAllQuery)
-	return &pb.Lists{Lists: listslice}, nil
-*/
+	/*
+		var listslice []*pb.List
+		pgxscan.Select(ctx, r.client, &listslice, listRetrieveAllQuery)
+		return &pb.Lists{Lists: listslice}, nil
+	*/
 	var listslice = []*pb.List{}
 	rows, err := r.client.Query(ctx, listRetrieveAllQuery)
 	if err != nil {

@@ -15,9 +15,9 @@ import (
 
 var (
 	//go:embed templates
-	templates    embed.FS
-	templatefs   fs.FS
-	lc           pb.ListerClient
+	templates  embed.FS
+	templatefs fs.FS
+	lc         pb.ListerClient
 )
 
 func init() {
