@@ -92,7 +92,6 @@ func ShowLists(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 	}
 	tfs.ExecuteTemplate(w, "main", l)
-	return
 }
 
 func ShowForm(w http.ResponseWriter, r *http.Request) {
@@ -101,5 +100,4 @@ func ShowForm(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 	}
 	tfs.ExecuteTemplate(w, "main", nil)
-	return
 }
