@@ -75,7 +75,7 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 		}
-		http.Redirect(w, r, "/ui", 301)
+		http.Redirect(w, r, "/ui", http.StatusMovedPermanently)
 		return
 	}
 	return
