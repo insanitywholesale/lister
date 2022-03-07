@@ -1,9 +1,12 @@
 package cassandra
 
+// This is a note for initial setup
+/*
 var createListerKeyspaceQuery = `
 CREATE KEYSPACE lister WITH replication = {
 	'class': 'SimpleStrategy',
 	'replication_factor' : 1};`
+*/
 
 var createListTableQuery = `
 CREATE TABLE IF NOT EXISTS lister.List (
